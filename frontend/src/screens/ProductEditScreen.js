@@ -20,6 +20,8 @@ export default function ProductEditScreen(props) {
   const [brand, setBrand] = useState('');
   const [description, setDescription] = useState('');
 
+  const [oldImage, setOldImage] = useState('');
+
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
@@ -79,10 +81,14 @@ export default function ProductEditScreen(props) {
 
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
+
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
     const bodyFormData = new FormData();
     bodyFormData.append('image', file);
+    if (oldImage !== '') {
+      bodyFormData.append('oldImage', oldImage);
+    }
     setLoadingUpload(true);
     try {
       const { data } = await Axios.post('/api/uploads', bodyFormData, {
@@ -92,6 +98,7 @@ export default function ProductEditScreen(props) {
         },
       });
       setImage(data);
+      setOldImage(data);
       setLoadingUpload(false);
     } catch (error) {
       setErrorUpload(error.message);
@@ -111,150 +118,153 @@ export default function ProductEditScreen(props) {
         ) : error ? (
           <MessageBox variant="danger">{error}</MessageBox>
         ) : (
-          <>
-            <div>
-              <label htmlFor="name">Name</label>
-              <input
-                id="name"
-                type="text"
-                placeholder="Enter Product name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              ></input>
-            </div>
-            <div>
-              <label htmlFor="price">Price</label>
-              <input
-                id="price"
-                type="text"
-                placeholder="Enter Product price"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                required
-              ></input>
-            </div>
-            <div>
-              <label htmlFor="priceTag">Price Tag on Product</label>
-              <input
-                id="priceTag"
-                type="text"
-                placeholder="Enter price Tag on Product"
-                value={priceTag}
-                onChange={(e) => setPriceTag(e.target.value)}
-                required
-              ></input>
-            </div>
-            <div>
-              <label htmlFor="unit">Unit</label>
-              <input
-                id="unit"
-                type="text"
-                placeholder="Enter Unit"
-                maxLength="11"
-                value={unit}
-                onChange={(e) => setUnit(e.target.value)}
-                required
-              ></input>
-            </div>
-            <div>
-              <label htmlFor="image">Image</label>
-              <input
-                id="image"
-                type="text"
-                placeholder="Enter image"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                required
-              ></input>
-            </div>
-            <div>
-              <label htmlFor="imageFile">Image File</label>
-              <input
-                type="file"
-                id="imageFile"
-                label="Choose Image"
-                onChange={uploadFileHandler}
-              ></input>
-              {loadingUpload && <LoadingBox></LoadingBox>}
-              {errorUpload && (
-                <MessageBox variant="danger">{errorUpload}</MessageBox>
-              )}
-            </div>
-            <div>
-              <label htmlFor="size">size</label>
-              <input
-                id="size"
-                type="text"
-                placeholder="Enter the weight of the Product"
-                value={size}
-                onChange={(e) => setSize(e.target.value)}
-                required
-              ></input>
-            </div>
-            <div>
-              <label htmlFor="brand">Brand</label>
-              <input
-                id="brand"
-                type="text"
-                placeholder="Enter brand"
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-                required
-              ></input>
-            </div>
-            <div>
-              <label htmlFor="category">Category</label>
-              <input
-                id="category"
-                type="text"
-                placeholder="Enter category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                required
-              ></input>
-            </div>
-            <div>
-              <label htmlFor="minOrder">Minimum Order</label>
-              <input
-                id="minOrder"
-                type="number"
-                placeholder="Enter the minimum order the user should order"
-                value={minOrder}
-                onChange={(e) => setMinOrder(e.target.value)}
-                required
-              ></input>
-            </div>
-            <div>
-              <label htmlFor="countInStock">Count In Stock</label>
-              <input
-                id="countInStock"
-                type="text"
-                placeholder="Enter countInStock"
-                value={countInStock}
-                onChange={(e) => setCountInStock(e.target.value)}
-                required
-              ></input>
-            </div>
-            <div>
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                rows="3"
-                type="text"
-                placeholder="Enter description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              ></textarea>
-            </div>
-            <div>
-              <label></label>
-              <button className="primary" type="submit">
-                Update
+              <>
+                <div>
+                  <label htmlFor="name">Name</label>
+                  <input
+                    id="name"
+                    type="text"
+                    placeholder="Enter Product name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  ></input>
+                </div>
+                <div>
+                  <label htmlFor="price">Price</label>
+                  <input
+                    id="price"
+                    type="text"
+                    placeholder="Enter Product price"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    required
+                  ></input>
+                </div>
+                <div>
+                  <label htmlFor="priceTag">Price Tag on Product</label>
+                  <input
+                    id="priceTag"
+                    type="text"
+                    placeholder="Enter price Tag on Product"
+                    value={priceTag}
+                    onChange={(e) => setPriceTag(e.target.value)}
+                    required
+                  ></input>
+                </div>
+                <div>
+                  <label htmlFor="unit">Unit</label>
+                  <input
+                    id="unit"
+                    type="text"
+                    placeholder="Enter Unit"
+                    maxLength="11"
+                    value={unit}
+                    onChange={(e) => setUnit(e.target.value)}
+                    required
+                  ></input>
+                </div>
+                <div>
+                  <label htmlFor="image">Image</label>
+                  <input
+                    id="image"
+                    type="text"
+                    placeholder="Enter image"
+                    value={image}
+                    onChange={(e) => setImage(e.target.value)}
+                    required
+                  ></input>
+                </div>
+                <div>
+                  <label htmlFor="imageFile">Image File</label>
+                  <input
+                    type="file"
+                    id="imageFile"
+                    label="Choose Image"
+                    onChange={uploadFileHandler}
+                  ></input>
+                  {loadingUpload && <LoadingBox></LoadingBox>}
+                  {errorUpload && (
+                    <MessageBox variant="danger">{errorUpload}</MessageBox>
+                  )}
+                </div>
+                <div>
+                  <label htmlFor="size">size</label>
+                  <input
+                    id="size"
+                    type="text"
+                    placeholder="Enter the weight of the Product"
+                    value={size}
+                    onChange={(e) => setSize(e.target.value)}
+                    required
+                  ></input>
+                </div>
+                <div>
+                  <label htmlFor="brand">Brand</label>
+                  <input
+                    id="brand"
+                    type="text"
+                    placeholder="Enter brand"
+                    value={brand}
+                    onChange={(e) => setBrand(e.target.value)}
+                    required
+                  ></input>
+                </div>
+                <div>
+                  <label htmlFor="category">Category</label>
+                  <select onChange={(e) => { setCategory(e.target.value) }}
+                    value={category}
+                    required>
+                    <option value="">Please Select Category</option>
+                    <option value="Oil">Oil</option>
+                    <option value="T-shirt">T-shirt</option>
+                    <option value="JeansPant">Jeans Pant</option>
+                    <option value="Innerwear">Inner Wear</option>
+                    <option value="Short">Short</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="minOrder">Minimum Order</label>
+                  <input
+                    id="minOrder"
+                    type="number"
+                    placeholder="Enter the minimum order the user should order"
+                    value={minOrder}
+                    onChange={(e) => setMinOrder(e.target.value)}
+                    required
+                  ></input>
+                </div>
+                <div>
+                  <label htmlFor="countInStock">Count In Stock</label>
+                  <input
+                    id="countInStock"
+                    type="text"
+                    placeholder="Enter countInStock"
+                    value={countInStock}
+                    onChange={(e) => setCountInStock(e.target.value)}
+                    required
+                  ></input>
+                </div>
+                <div>
+                  <label htmlFor="description">Description</label>
+                  <textarea
+                    id="description"
+                    rows="3"
+                    type="text"
+                    placeholder="Enter description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  ></textarea>
+                </div>
+                <div>
+                  <label></label>
+                  <button className="primary" type="submit">
+                    Update
               </button>
-            </div>
-          </>
-        )}
+                </div>
+              </>
+            )}
       </form>
     </div>
   );
