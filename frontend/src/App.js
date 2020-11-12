@@ -35,7 +35,7 @@ function App() {
           <div>
           <button className="three-line"> &#9776;</button>
             <Link className="brand" to="/">
-              Fasenate
+              Oil Dealer
             </Link>
           </div>
           <div className="header-link">
